@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AnalysisStatus {
+  RECEIVED
+  PROCESSING
+  ANALYZED
+  ERROR
+}
+
+model Analysis {
+  id            String         @id @default(uuid())
+  fileName      String         @map("file_name")
+  fileUrl       String         @map("file_url")
+  fileType      String         @map("file_type")
+  fileSize      Int            @map("file_size")
+  status        AnalysisStatus @default(RECEIVED)
+  reportId      String?        @map("report_id")
+  errorMessage  String?        @map("error_message")
+  correlationId String         @map("correlation_id")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+  @@index([correlationId])
+  @@map("analyses")
+}
