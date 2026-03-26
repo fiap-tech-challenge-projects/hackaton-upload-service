@@ -83,7 +83,7 @@ export class RabbitMQConsumerService implements OnModuleInit, OnModuleDestroy {
 
       try {
         const content = JSON.parse(msg.content.toString())
-        const { analysisId, errorMessage } = content.payload ?? content
+        const { analysisId, message: errorMessage } = content.payload ?? content
 
         this.logger.log({ message: 'Received analysis.failed event', analysisId })
 
