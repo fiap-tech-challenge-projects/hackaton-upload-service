@@ -11,12 +11,12 @@ import { IStorageService } from '@application/ports/storage.port'
 /**
  * S3/MinIO implementation of IStorageService.
  * Configurable via environment variables:
- *   S3_ENDPOINT      - custom endpoint (MinIO local or S3 cloud)
- *   S3_REGION        - AWS region
- *   S3_BUCKET        - bucket name
- *   S3_ACCESS_KEY_ID - access key
- *   S3_SECRET_ACCESS_KEY - secret key
- *   S3_FORCE_PATH_STYLE  - set to 'true' for MinIO
+ *   S3_ENDPOINT         - custom endpoint (MinIO local or S3 cloud)
+ *   S3_REGION           - AWS region
+ *   S3_BUCKET           - bucket name
+ *   S3_ACCESS_KEY       - access key
+ *   S3_SECRET_KEY       - secret key
+ *   S3_FORCE_PATH_STYLE - set to 'true' for MinIO
  */
 @Injectable()
 export class S3StorageService implements IStorageService {
@@ -36,8 +36,8 @@ export class S3StorageService implements IStorageService {
       endpoint,
       forcePathStyle,
       credentials: {
-        accessKeyId: process.env.S3_ACCESS_KEY_ID || 'minioadmin',
-        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || 'minioadmin',
+        accessKeyId: process.env.S3_ACCESS_KEY || 'minioadmin',
+        secretAccessKey: process.env.S3_SECRET_KEY || 'minioadmin',
       },
     })
   }

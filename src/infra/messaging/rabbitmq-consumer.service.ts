@@ -13,25 +13,34 @@ const QUEUE_REPORT_GENERATED = 'report.generated'
  *   - 'analysis.failed' -> updates analysis to ERROR status
  *   - 'report.generated' -> updates analysis to ANALYZED status with reportId
  */
+const RECONNECT_DELAY_MS = 5000
+
 @Injectable()
 export class RabbitMQConsumerService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(RabbitMQConsumerService.name)
   private connection: amqp.Connection | null = null
   private channel: amqp.Channel | null = null
+  private isDestroyed = false
 
-  constructor(
-    private readonly updateAnalysisStatusUseCase: UpdateAnalysisStatusUseCase,
-  ) {}
+  constructor(private readonly updateAnalysisStatusUseCase: UpdateAnalysisStatusUseCase) {}
 
   async onModuleInit(): Promise<void> {
     await this.connect()
   }
 
   async onModuleDestroy(): Promise<void> {
+    this.isDestroyed = true
     await this.disconnect()
   }
 
+  private scheduleReconnect(): void {
+    if (this.isDestroyed) return
+    this.logger.log(`Scheduling RabbitMQ reconnect in ${RECONNECT_DELAY_MS}ms`)
+    setTimeout(() => this.connect(), RECONNECT_DELAY_MS)
+  }
+
   private async connect(): Promise<void> {
+    if (this.isDestroyed) return
     const url = process.env.RABBITMQ_URL || 'amqp://guest:guest@localhost:5672'
     try {
       this.connection = await amqp.connect(url)
@@ -42,9 +51,26 @@ export class RabbitMQConsumerService implements OnModuleInit, OnModuleDestroy {
       await this.setupAnalysisFailedConsumer()
       await this.setupReportGeneratedConsumer()
 
+      this.connection.on('error', (err) => {
+        this.logger.error({ message: 'RabbitMQ connection error', error: err.message })
+        this.connection = null
+        this.channel = null
+        this.scheduleReconnect()
+      })
+
+      this.connection.on('close', () => {
+        if (!this.isDestroyed) {
+          this.logger.warn('RabbitMQ connection closed unexpectedly')
+          this.connection = null
+          this.channel = null
+          this.scheduleReconnect()
+        }
+      })
+
       this.logger.log('RabbitMQ consumer connected and listening')
     } catch (error) {
       this.logger.error({ message: 'Failed to connect RabbitMQ consumer', error: error.message })
+      this.scheduleReconnect()
     }
   }
 

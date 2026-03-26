@@ -35,10 +35,11 @@ COPY prisma ./prisma/
 RUN npm ci --legacy-peer-deps --omit=dev && \
     npm cache clean --force
 
-# Copy built application and generated Prisma client from builder
+# Copy built application, generated Prisma client, and startup script from builder
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY scripts ./scripts
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
@@ -60,5 +61,5 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
 # Use dumb-init to handle signals properly
 ENTRYPOINT ["dumb-init", "--"]
 
-# Start application
-CMD ["node", "dist/main.js"]
+# Run migrations then start application
+CMD ["/bin/sh", "scripts/start.sh"]

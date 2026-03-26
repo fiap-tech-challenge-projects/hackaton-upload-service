@@ -19,8 +19,6 @@ npm-debug.log*
 # coverage
 /coverage
 
-# prisma migrations (keep schema, not generated client)
-/prisma/migrations
 
 # misc
 .DS_Store
