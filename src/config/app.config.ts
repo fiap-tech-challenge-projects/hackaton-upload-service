@@ -9,7 +9,7 @@ export const appConfig = registerAs('app', () => ({
 export const s3Config = registerAs('s3', () => ({
   endpoint: process.env.S3_ENDPOINT,
   region: process.env.S3_REGION || 'us-east-1',
-  bucket: process.env.S3_BUCKET || 'hackaton-uploads',
+  bucket: process.env.S3_BUCKET || 'diagrams',
   accessKeyId: process.env.S3_ACCESS_KEY || 'minioadmin',
   secretAccessKey: process.env.S3_SECRET_KEY || 'minioadmin',
   forcePathStyle: process.env.S3_FORCE_PATH_STYLE === 'true',

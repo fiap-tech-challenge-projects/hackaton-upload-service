@@ -1,6 +1,7 @@
 import { BaseEntity } from '@shared/base'
 import {
   AnalysisStatus,
+  ALLOWED_STATUS_TRANSITIONS,
   isValidTransition,
 } from '../value-objects/analysis-status.vo'
 import { InvalidAnalysisStatusTransitionException } from '@shared/exceptions'
@@ -75,9 +76,7 @@ export class Analysis extends BaseEntity {
    */
   private validateTransition(newStatus: AnalysisStatus): void {
     if (!isValidTransition(this.status, newStatus)) {
-      const allowed = Object.entries(require('../value-objects/analysis-status.vo').ALLOWED_STATUS_TRANSITIONS)
-        .filter(([from]) => from === this.status)
-        .flatMap(([, to]) => to as AnalysisStatus[])
+      const allowed = (ALLOWED_STATUS_TRANSITIONS[this.status] ?? []) as AnalysisStatus[]
       throw new InvalidAnalysisStatusTransitionException(this.status, newStatus, allowed)
     }
   }
