@@ -40,10 +40,7 @@ export class InvalidFileTypeException extends DomainException {
 
 export class FileTooLargeException extends DomainException {
   constructor(size: number, maxSize: number) {
-    super(
-      `File size ${size} bytes exceeds maximum of ${maxSize} bytes`,
-      'FILE_TOO_LARGE',
-    )
+    super(`File size ${size} bytes exceeds maximum of ${maxSize} bytes`, 'FILE_TOO_LARGE')
     this.name = 'FileTooLargeException'
   }
 }

@@ -14,10 +14,7 @@ export interface AnalysisRequestedPayload {
  * Concrete implementations: RabbitMQ (local), SQS+EventBridge (cloud).
  */
 export interface IEventPublisher {
-  publishAnalysisRequested(
-    correlationId: string,
-    payload: AnalysisRequestedPayload,
-  ): Promise<void>
+  publishAnalysisRequested(correlationId: string, payload: AnalysisRequestedPayload): Promise<void>
 }
 
 export const EVENT_PUBLISHER = Symbol('EVENT_PUBLISHER')

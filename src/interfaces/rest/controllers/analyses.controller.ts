@@ -45,10 +45,7 @@ export class AnalysesController {
   @ApiOperation({ summary: 'Upload an architecture diagram for analysis' })
   @ApiResponse({ status: 202, description: 'File accepted and processing started' })
   @ApiResponse({ status: 400, description: 'Invalid file type or size' })
-  async create(
-    @UploadedFile() file: Express.Multer.File,
-    @Body() body: CreateAnalysisRequest,
-  ) {
+  async create(@UploadedFile() file: Express.Multer.File, @Body() body: CreateAnalysisRequest) {
     if (!file) {
       throw new BadRequestException('File is required')
     }
@@ -62,10 +59,7 @@ export class AnalysesController {
         correlationId: body.correlationId || uuidv4(),
       })
     } catch (error) {
-      if (
-        error.code === 'INVALID_FILE_TYPE' ||
-        error.code === 'FILE_TOO_LARGE'
-      ) {
+      if (error.code === 'INVALID_FILE_TYPE' || error.code === 'FILE_TOO_LARGE') {
         throw new BadRequestException(error.message)
       }
       throw error
@@ -75,11 +69,36 @@ export class AnalysesController {
   @Get()
   @ApiOperation({ summary: 'List analyses with pagination and optional filters' })
   @ApiResponse({ status: 200, description: 'Paginated list of analyses' })
-  @ApiQuery({ name: 'page', required: false, type: Number, description: 'Page number (default: 1)' })
-  @ApiQuery({ name: 'limit', required: false, type: Number, description: 'Items per page (default: 10, max: 100)' })
-  @ApiQuery({ name: 'status', required: false, enum: AnalysisStatus, description: 'Filter by status' })
-  @ApiQuery({ name: 'sortBy', required: false, type: String, description: 'Sort field (default: createdAt)' })
-  @ApiQuery({ name: 'sortOrder', required: false, enum: ['asc', 'desc'], description: 'Sort order (default: desc)' })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number (default: 1)',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Items per page (default: 10, max: 100)',
+  })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    enum: AnalysisStatus,
+    description: 'Filter by status',
+  })
+  @ApiQuery({
+    name: 'sortBy',
+    required: false,
+    type: String,
+    description: 'Sort field (default: createdAt)',
+  })
+  @ApiQuery({
+    name: 'sortOrder',
+    required: false,
+    enum: ['asc', 'desc'],
+    description: 'Sort order (default: desc)',
+  })
   async findAll(
     @Query('page') page?: string,
     @Query('limit') limit?: string,

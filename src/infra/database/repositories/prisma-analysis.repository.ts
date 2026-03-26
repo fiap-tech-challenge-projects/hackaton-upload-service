@@ -1,11 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { AnalysisStatus as PrismaAnalysisStatus } from '@prisma/client'
 import { Analysis } from '@domain/entities'
-import {
-  IAnalysisRepository,
-  ListAnalysesFilters,
-  PaginatedResult,
-} from '@domain/repositories'
+import { IAnalysisRepository, ListAnalysesFilters, PaginatedResult } from '@domain/repositories'
 import { AnalysisStatus } from '@domain/value-objects'
 import { PrismaService } from '../prisma.service'
 

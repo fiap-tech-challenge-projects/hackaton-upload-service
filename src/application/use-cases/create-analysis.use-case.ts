@@ -48,11 +48,7 @@ export class CreateAnalysisUseCase {
       fileName: dto.fileName,
     })
 
-    const fileUrl = await this.storageService.uploadFile(
-      storageKey,
-      dto.fileBuffer,
-      dto.fileType,
-    )
+    const fileUrl = await this.storageService.uploadFile(storageKey, dto.fileBuffer, dto.fileType)
 
     const analysis = Analysis.create(
       dto.fileName,

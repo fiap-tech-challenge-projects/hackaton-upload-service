@@ -23,10 +23,6 @@ import {
     MessagingModule,
   ],
   controllers: [AnalysesController, HealthController],
-  providers: [
-    CreateAnalysisUseCase,
-    GetAnalysisUseCase,
-    ListAnalysesUseCase,
-  ],
+  providers: [CreateAnalysisUseCase, GetAnalysisUseCase, ListAnalysesUseCase],
 })
 export class AppModule {}

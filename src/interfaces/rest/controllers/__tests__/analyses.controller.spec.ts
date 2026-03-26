@@ -125,7 +125,13 @@ describe('AnalysesController', () => {
       }
       listUseCase.execute.mockResolvedValue(paginatedResult)
 
-      await controller.findAll(undefined, undefined, AnalysisStatus.PROCESSING, undefined, undefined)
+      await controller.findAll(
+        undefined,
+        undefined,
+        AnalysisStatus.PROCESSING,
+        undefined,
+        undefined,
+      )
 
       expect(listUseCase.execute).toHaveBeenCalledWith(
         expect.objectContaining({ status: AnalysisStatus.PROCESSING }),

@@ -13,7 +13,7 @@ const ROUTING_KEY_ANALYSIS_REQUESTED = 'analysis.requested'
 @Injectable()
 export class RabbitMQPublisherService implements IEventPublisher, OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(RabbitMQPublisherService.name)
-  private connection: amqp.Connection | null = null
+  private connection: amqp.ChannelModel | null = null
   private channel: amqp.Channel | null = null
 
   async onModuleInit(): Promise<void> {
