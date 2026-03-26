@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core'
 import { ValidationPipe } from '@nestjs/common'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module'
+import { HttpExceptionFilter } from '@shared/filters'
+import { CorrelationIdInterceptor } from '@shared/interceptors'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -14,6 +16,10 @@ async function bootstrap() {
       transform: true,
     }),
   )
+
+  // Global exception filter and correlation ID interceptor
+  app.useGlobalFilters(new HttpExceptionFilter())
+  app.useGlobalInterceptors(new CorrelationIdInterceptor())
 
   // Enable CORS
   app.enableCors()
