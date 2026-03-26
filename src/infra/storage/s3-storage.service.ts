@@ -29,7 +29,7 @@ export class S3StorageService implements IStorageService {
     const region = process.env.S3_REGION || 'us-east-1'
     const forcePathStyle = process.env.S3_FORCE_PATH_STYLE === 'true'
 
-    this.bucket = process.env.S3_BUCKET || 'hackaton-uploads'
+    this.bucket = process.env.S3_BUCKET || 'diagrams'
 
     this.client = new S3Client({
       region,
